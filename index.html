@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>탄성력 | 중학교 과학 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6FB; --surface:#FFFFFF; --ink:#1D2433; --muted:#5B6578; --line:#DCE3EE;
+  --brand:#0E8A7E; --brand-soft:#E0F3F1; --brand-ink:#FFFFFF;
+  --f1:#E0413A; --f1-soft:#FDE9E8; --f2:#1F63C8; --f2-soft:#E6EEFB;
+  --net:#7B3FD6; --net-soft:#F1EAFD;
+  --ok:#1E9E62; --ok-soft:#E3F6EC; --bad:#D6453D; --bad-soft:#FCE8E7;
+  --note:#FFF6DB; --note-line:#F0D98A;
+  --grid:#D6E4F3; --grid-major:#AFC8E6; --lane:#8FA9C9;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121722; --surface:#1B2230; --ink:#E8EDF6; --muted:#9AA6BA; --line:#2C3547;
+    --brand:#3CC4B4; --brand-soft:#16312F; --brand-ink:#0D1A19;
+    --f1:#FF6B63; --f1-soft:#3A1F20; --f2:#5B9BFF; --f2-soft:#1B2A45;
+    --net:#B38CFF; --net-soft:#2A2140;
+    --ok:#3ECF8E; --ok-soft:#173427; --bad:#FF7A72; --bad-soft:#3A1F20;
+    --note:#2F2A1A; --note-line:#6B5B24;
+    --grid:#243246; --grid-major:#34496A; --lane:#4E6A92;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121722; --surface:#1B2230; --ink:#E8EDF6; --muted:#9AA6BA; --line:#2C3547;
+  --brand:#3CC4B4; --brand-soft:#16312F; --brand-ink:#0D1A19;
+  --f1:#FF6B63; --f1-soft:#3A1F20; --f2:#5B9BFF; --f2-soft:#1B2A45;
+  --net:#B38CFF; --net-soft:#2A2140;
+  --ok:#3ECF8E; --ok-soft:#173427; --bad:#FF7A72; --bad-soft:#3A1F20;
+  --note:#2F2A1A; --note-line:#6B5B24;
+  --grid:#243246; --grid-major:#34496A; --lane:#4E6A92;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 110px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;font-size:17px;word-break:keep-all}
+h1,h2,h3,.brand,.hand{font-family:"Jua","Noto Sans KR",sans-serif;font-weight:400}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:8px}
+
+/* header */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1040px;margin:0 auto;padding:10px 18px 0}
+.brand{font-size:22px;display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg)}
+.chips a:hover{color:var(--brand);border-color:var(--brand)}
+.chips a.hl{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+
+main{max-width:1040px;margin:0 auto;padding:18px 18px 40px}
+.crumb{font-size:14px;color:var(--muted);margin:4px 0 14px}
+
+/* hero */
+.hero{position:relative;background:linear-gradient(135deg,var(--brand-soft),var(--net-soft));border-radius:24px;padding:34px 30px;overflow:hidden;margin-bottom:22px}
+.hero h1{font-size:clamp(30px,5vw,44px);margin:0 0 8px;line-height:1.25}
+.hero p{margin:0;max-width:34em;color:var(--muted)}
+.hero .floaters{position:absolute;right:26px;top:50%;transform:translateY(-50%);display:flex;gap:10px;font-size:42px}
+@media (max-width:720px){.hero .floaters{position:static;transform:none;margin-top:16px;font-size:34px}}
+
+/* sections */
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px 26px 24px;margin:0 0 18px}
+.eyebrow{display:inline-block;font-size:14px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:3px 10px;border-radius:999px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:10px 0 14px}
+.sec-head h2{margin:0;font-size:clamp(22px,3.4vw,28px);line-height:1.35}
+.page{flex:none;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:2px 8px;margin-top:4px}
+p{margin:0 0 10px}
+strong{font-weight:700}
+
+.goal{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px dashed var(--line)}
+.goal:first-of-type{border-top:0}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:700;font-size:15px}
+
+.btn{border:0;border-radius:12px;padding:9px 16px;font-weight:700;background:var(--brand);color:var(--brand-ink)}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.small{padding:6px 12px;font-size:14px}
+.reveal{display:none;margin-top:12px;padding:14px 16px;border-radius:14px;background:var(--brand-soft);border-left:5px solid var(--brand)}
+.reveal.show{display:block}
+
+.think{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.think .big{font-size:56px;line-height:1}
+@media (max-width:560px){.think{grid-template-columns:1fr}}
+
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:720px){.rule-grid{grid-template-columns:1fr}}
+.rule{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--bg)}
+.rule h3{margin:0 0 8px;font-size:20px}
+.mini{display:block;width:100%;height:auto;margin:6px 0 10px}
+.rule dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:16px}
+.rule dt{font-weight:700;color:var(--muted)}
+.rule dd{margin:0}
+
+.tip{background:var(--note);border:1px solid var(--note-line);border-radius:14px;padding:12px 16px;font-size:15px;margin-top:14px}
+
+/* simulation */
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.mode{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:9px 16px;font-weight:700}
+.mode[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.board{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:10px}
+#sim{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.caption{font-size:13px;color:var(--muted);text-align:right;margin:4px 6px 0}
+.panel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+@media (max-width:720px){.panel{grid-template-columns:1fr}}
+.ctl{border-radius:14px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ctl .lbl{font-weight:700;font-size:15px}
+.ctl .val{font-size:15px}
+.ctl .step{display:flex;gap:6px}
+.ctl .step button{width:38px;height:38px;border-radius:10px;border:0;font-weight:900;font-size:16px;background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.ctl .step button:disabled{opacity:.35;cursor:default}
+.c1{background:var(--f1-soft)} .c1 .lbl{color:var(--f1)}
+.c2{background:var(--f2-soft)} .c2 .lbl{color:var(--f2)}
+.c3{background:var(--net-soft)} .c3 .lbl{color:var(--net)}
+.result{margin-top:12px;border-radius:14px;padding:14px 16px;background:var(--bg);border:1px solid var(--line);min-height:56px}
+.result .formula{font-family:"Jua",sans-serif;font-size:24px;color:var(--net)}
+.result.ok{background:var(--ok-soft);border-color:var(--ok)}
+.result.bad{background:var(--bad-soft);border-color:var(--bad)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.score{margin-left:auto;font-size:15px;color:var(--muted)}
+.types{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--muted)}
+.types button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:4px 12px;font-size:14px}
+.types button[aria-pressed="true"]{border-color:var(--net);color:var(--net);background:var(--net-soft);font-weight:700}
+.hidden{display:none!important}
+
+.lane-hit{cursor:ew-resize}
+.lane-lock{cursor:default}
+#box{transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+@media (prefers-reduced-motion:reduce){#box{transition:none}html{scroll-behavior:auto}}
+
+.steps{counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px dashed var(--line)}
+.steps li:first-child{border-top:0}
+
+/* quiz */
+.q{padding:16px 0;border-top:1px dashed var(--line)}
+.q:first-of-type{border-top:0;padding-top:4px}
+.q .ask{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.choices{display:flex;gap:8px;flex-wrap:wrap}
+.choice{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 16px;font-weight:700}
+.choice.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.choice.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.fb{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;font-size:16px}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-soft)} .fb.no{background:var(--bad-soft)}
+
+.recap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.recap{grid-template-columns:1fr}}
+.recap .card{border-radius:16px;padding:16px 18px}
+.recap .same{background:var(--f1-soft)} .recap .opp{background:var(--f2-soft)}
+.recap .card h3{margin:0 0 6px;font-size:20px}
+
+.eval{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px dashed var(--line)}
+.eval:first-of-type{border-top:0}
+.stars{display:flex;gap:2px;flex:none}
+.stars button{background:none;border:0;font-size:26px;color:var(--line);padding:0 2px;line-height:1}
+.stars button.on{color:#F2B705}
+
+footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 0 30px}
+/* ---- 추가 스타일 ---- */
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.home{flex:none;text-decoration:none;font-size:14px;font-weight:700;color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;padding:4px 12px}
+.home:hover{background:var(--brand);color:var(--brand-ink)}
+
+.fig{margin:0;border:1px solid var(--line);border-radius:16px;background:#FFFFFF;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fig img{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:14px;color:#5B6578;margin-top:6px;text-align:center}
+.fig.wide img{max-height:340px}
+.pair{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin:12px 0}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+
+.case{border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px;background:var(--bg)}
+.case h3{margin:0 0 6px;font-size:21px}
+.case.same{border-left:6px solid var(--f1)}
+.case.opp{border-left:6px solid var(--f2)}
+.eq{display:inline-block;font-family:"Jua",sans-serif;font-size:20px;color:var(--net);background:var(--net-soft);border-radius:10px;padding:2px 12px;margin:4px 0}
+
+.def{border-radius:16px;padding:16px 18px;background:var(--net-soft);border-left:6px solid var(--net);margin:6px 0 14px;font-size:18px}
+.conds{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+@media (max-width:720px){.conds{grid-template-columns:1fr}}
+.cond{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface)}
+.cond b{display:block;font-family:"Jua",sans-serif;font-weight:400;font-size:19px;color:var(--net)}
+
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:720px){.judge{grid-template-columns:1fr}}
+.jcard{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--bg)}
+.jcard svg{display:block;width:100%;height:auto}
+.jcard .tag{font-weight:700;color:var(--muted);font-size:14px}
+.jcard .choices{margin-top:6px}
+
+.blank{font:inherit;font-weight:700;width:8em;max-width:100%;text-align:center;border:0;border-bottom:2.5px solid var(--brand);background:transparent;color:var(--ink);padding:0 4px;margin:0 4px}
+.blank.right{border-color:var(--ok);color:var(--ok)}
+.blank.wrong{border-color:var(--bad);color:var(--bad)}
+
+.bogi{border:1.5px dashed var(--line);border-radius:14px;padding:10px 14px;margin:6px 0 10px;background:var(--bg)}
+.bogi .it{display:flex;gap:10px;align-items:flex-start;padding:4px 0}
+.pick{flex:none;width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700}
+.pick[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+
+.match{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;margin:6px 0 10px}
+.match select{font:inherit;font-size:16px;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+.match select.right{border-color:var(--ok);background:var(--ok-soft)}
+.match select.wrong{border-color:var(--bad);background:var(--bad-soft)}
+
+.recap6{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:860px){.recap6{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.recap6{grid-template-columns:1fr}}
+.rc{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--bg)}
+.rc .ic{font-size:26px;line-height:1}
+.rc b{display:block;font-family:"Jua",sans-serif;font-weight:400;font-size:19px;margin:6px 0 2px}
+
+.video{display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(135deg,var(--f2-soft),var(--brand-soft));border-radius:18px;padding:20px}
+.video .play{flex:none;width:64px;height:64px;border-radius:50%;background:var(--f2);color:#fff;display:grid;place-items:center;font-size:26px}
+.video .txt{flex:1;min-width:200px}
+.video a.btn{text-decoration:none;display:inline-block}
+/* ---- 중력 차시 추가 ---- */
+.think{grid-template-columns:minmax(0,1.1fr) 1fr}
+.think .fig img{max-height:300px}
+@media (max-width:720px){.think{grid-template-columns:1fr}}
+
+.gstage{position:relative;max-width:760px;margin:10px auto 0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.gstage img{display:block;width:100%;height:auto}
+.gstage svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+.gctl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+@media (max-width:720px){.gctl{grid-template-columns:1fr}}
+.gctl .ctl{background:var(--bg);border:1.5px solid var(--line);cursor:pointer}
+.gctl .ctl.sel{border-color:var(--f1);background:var(--f1-soft)}
+.gctl .ctl.ok{border-color:var(--ok);background:var(--ok-soft)}
+.gctl .ctl.no{border-color:var(--bad);background:var(--bad-soft)}
+.gctl .ctl .lbl{color:var(--ink)}
+
+.ex{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+@media (max-width:900px){.ex{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.ex{grid-template-columns:1fr}}
+.excard{border:1px solid var(--line);border-radius:16px;background:var(--bg);padding:10px;display:flex;flex-direction:column}
+.excard .fig{height:190px;padding:6px}
+.excard .fig img{max-height:176px;width:auto}
+.excard h3{margin:10px 2px 6px;font-size:19px}
+.excard .reveal{font-size:15px}
+
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+@media (max-width:720px){.vs{grid-template-columns:1fr}}
+.vcol{border-radius:18px;padding:14px;border:1px solid var(--line)}
+.vcol.earth{background:var(--f2-soft)}
+.vcol.moon{background:var(--note)}
+.vcol h3{margin:0 0 8px;font-size:21px}
+.vcol .pics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vcol .fig{height:170px;padding:6px}
+.vcol .fig img{max-height:156px;width:auto}
+
+.wm{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+@media (max-width:720px){.wm{grid-template-columns:1fr}}
+.wm .card{border-radius:16px;padding:16px 18px;border:1px solid var(--line);background:var(--bg)}
+.wm .card h3{margin:0 0 8px;font-size:22px}
+.wm .card.w{border-top:6px solid var(--f1)}
+.wm .card.m{border-top:6px solid var(--f2)}
+.wm dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+.wm dt{font-weight:700;color:var(--muted)}
+.wm dd{margin:0}
+
+.calc{border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px;background:var(--bg)}
+.calc label{font-weight:700}
+.calc input[type=range]{width:100%;accent-color:var(--brand);margin:8px 0 4px}
+.calc .mval{font-family:"Jua",sans-serif;font-size:26px;color:var(--brand)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media (max-width:720px){.readout{grid-template-columns:1fr}}
+.readout>div{border-radius:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--line)}
+.readout small{display:block;color:var(--muted);font-size:14px}
+.readout b{font-family:"Jua",sans-serif;font-weight:400;font-size:26px}
+.readout .e b{color:var(--f2)} .readout .mo b{color:#B8860B} .readout .ms b{color:var(--ok)}
+.bar{height:12px;border-radius:99px;background:var(--line);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .3s}
+
+/* ---- 탄성력 차시 추가 ---- */
+.launch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.launch{grid-template-columns:1fr}}
+.lstage{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.lstage svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.lpanel{display:flex;flex-direction:column;gap:12px}
+.lpanel .ctl{background:var(--bg)}
+.lpanel input[type=range],.spctl input[type=range]{width:100%;accent-color:var(--brand)}
+.levels{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:2px}
+.log{border:1px solid var(--line);border-radius:14px;padding:10px 14px;background:var(--bg)}
+.log h4{margin:0 0 6px;font-size:16px}
+.log .row{display:grid;grid-template-columns:7.5em 1fr;gap:8px;align-items:center;font-size:14px;margin:5px 0}
+.log .row i{display:block;height:14px;border-radius:99px;background:var(--brand);transition:width .4s}
+.log .empty{font-size:14px;color:var(--muted)}
+
+.spstage{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:10px}
+.spstage svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.spctl{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:10px}
+.spbtns{display:flex;gap:6px;flex-wrap:wrap}
+.spread{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media (max-width:720px){.spread{grid-template-columns:1fr}}
+.spread>div{border-radius:14px;padding:12px 14px;background:var(--bg);border:1px solid var(--line)}
+.spread small{display:block;color:var(--muted);font-size:14px}
+.spread b{font-family:"Jua",sans-serif;font-weight:400;font-size:24px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-top:8px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:22px;height:5px;border-radius:3px;margin-right:6px;vertical-align:middle;background:var(--c)}
+
+.dir2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media (max-width:640px){.dir2{grid-template-columns:1fr}}
+.graphwrap{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:center;margin-top:12px}
+@media (max-width:760px){.graphwrap{grid-template-columns:1fr}}
+.later{display:flex;gap:12px;align-items:flex-start;border:1.5px dashed var(--brand);border-radius:16px;padding:14px 16px;background:var(--brand-soft);margin-top:14px}
+.later .ic{font-size:26px;line-height:1}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="in">
+    <div class="brandrow">
+      <div class="brand">💪 힘의 작용 연구소</div>
+      <a class="home" href="https://2026-1y-sub.vercel.app/">🏠 목록으로</a>
+    </div>
+    <nav class="chips" aria-label="학습 순서">
+      <a href="#prev">이전 내용 확인</a>
+      <a href="#goal">학습 목표</a>
+      <a href="#think">생각 깨우기</a>
+      <a href="#lab" class="hl">해보기 ｜ 탁구공 쏘아 올리기</a>
+      <a href="#concept1">탄성과 탄성력</a>
+      <a href="#concept2">탄성력의 방향</a>
+      <a href="#concept3">탄성력의 크기</a>
+      <a href="#uses">탄성력의 이용</a>
+      <a href="#check">스스로 확인하기</a>
+      <a href="#more">개념 확인 문제</a>
+      <a href="#recap">배운 내용 정리</a>
+      <a href="#eval">평가 길잡이</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="crumb">5. 힘의 작용 › 여러 가지 힘 › 탄성력</div>
+
+  <section class="hero">
+    <h1>볼펜 심은 왜 다시 들어갈까?</h1>
+    <p>볼펜 위쪽을 누르면 심이 나오고, 한 번 더 누르면 쏙 들어가요. 늘어나거나 줄어든 물체가 원래 모양으로 돌아가려는 힘, 탄성력에 대해 알아봐요.</p>
+    <div class="floaters" aria-hidden="true"><span>🖊️</span><span>🏓</span><span>🚲</span></div>
+  </section>
+
+  <!-- 이전 내용 -->
+  <section class="sec" id="prev">
+    <span class="eyebrow">↩ 이전 내용 확인하기</span>
+    <div class="sec-head"><h2>지난 시간에 배운 중력, 기억나나요?</h2></div>
+    <div class="q">
+      <div class="ask"><span class="num">1</span><div>지구 위 어디에서나 중력이 작용하는 방향은?</div></div>
+      <div class="choices" data-answer="지구 중심 방향">
+        <button class="choice">하늘 방향</button><button class="choice">지구 중심 방향</button><button class="choice">물체가 움직이는 방향</button>
+      </div>
+      <div class="fb" data-wrong="해 보기에서 (가)~(다) 사람에게 그린 화살표를 떠올려 보자.">정답은 <strong>지구 중심 방향</strong>! 사람이 지구 어디에 있든 중력은 지구 중심을 향해요.</div>
+    </div>
+    <div class="q">
+      <div class="ask"><span class="num">2</span><div>지구에서 무게가 60 N인 물체를 달에 가져가면 무게와 질량은 어떻게 될까?</div></div>
+      <button class="btn small" data-reveal="r-prev">정답 확인</button>
+      <div class="reveal" id="r-prev">📌 무게는 약 1/6인 <strong>10 N</strong>으로 줄지만, 질량은 <strong>변하지 않아요</strong>. 오늘은 여러 가지 힘 가운데 두 번째, <strong>탄성력</strong>을 알아봐요.</div>
+    </div>
+  </section>
+
+  <!-- 학습 목표 -->
+  <section class="sec" id="goal">
+    <span class="eyebrow">🎯 이 단원을 배우면</span>
+    <div class="sec-head"><h2>학습 목표</h2><span class="page">교과서 164~167쪽</span></div>
+    <div class="goal"><span class="num">1</span><div><strong>탄성력의 크기와 방향</strong>을 설명할 수 있다.</div></div>
+    <div class="goal"><span class="num">2</span><div>일상생활에서 <strong>탄성력을 이용하는 예</strong>를 설명할 수 있다.</div></div>
+  </section>
+
+  <!-- 생각 깨우기 -->
+  <section class="sec" id="think">
+    <span class="eyebrow">💭 생각 깨우기</span>
+    <div class="sec-head"><h2>볼펜 심이 나왔다가 들어가는 까닭은?</h2><span class="page">교과서 164쪽</span></div>
+    <div class="think">
+      <figure class="fig"><img src="images/ballpoint-pen.png" alt="학생이 볼펜을 누르자 볼펜 속 용수철이 줄어들며 심이 나오는 모습"></figure>
+      <div>
+        <p>볼펜 속에는 용수철이 들어 있어 위쪽을 누르면 심이 나왔다가, 한 번 더 누르면 원래 상태로 되돌아간다. 볼펜 심을 원래 상태로 되돌아가게 하는 힘은 무엇일까?</p>
+        <button class="btn small" data-reveal="r-think">💡 생각 확인하기</button>
+        <div class="reveal" id="r-think">볼펜 위쪽을 누르면 용수철이 <strong>줄어들면서</strong> 심이 나오고, 한 번 더 누르면 용수철이 <strong>원래 모양으로 되돌아가면서</strong> 심이 들어간다. 용수철이 원래 모양으로 돌아가려는 힘이 심을 다시 밀어 올리는 거예요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 해보기 -->
+  <section class="sec" id="lab">
+    <span class="eyebrow">🔬 해 보기 · 가상 활동</span>
+    <div class="sec-head"><h2>용수철로 쏘아 올린 탁구공 관찰하기</h2><span class="page">교과서 164쪽</span></div>
+    <p>용수철 위에 탁구공을 올려놓고 손으로 눌렀다가 놓아 보자. 용수철을 <strong>누르는 정도</strong>를 바꾸며 탁구공이 올라가는 높이를 비교해 보자.</p>
+
+    <div class="launch">
+      <div class="lstage">
+        <svg id="lsvg" viewBox="0 0 360 440" aria-label="용수철 위 탁구공 쏘아 올리기 장치"></svg>
+      </div>
+      <div class="lpanel">
+        <figure class="fig" style="padding:6px"><img src="images/spring-pingpong.png" alt="받침대에 고정한 용수철 위에 탁구공을 올려놓고 손으로 누르는 모습" style="max-height:150px"></figure>
+        <div class="ctl" style="display:block">
+          <div class="lbl">① 용수철을 누르는 정도</div>
+          <input type="range" id="press" min="0" max="5" step="1" value="0" aria-label="용수철을 누르는 정도">
+          <div class="levels"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5칸</span></div>
+          <div style="font-size:14px;color:var(--muted);margin-top:4px">탁구공을 아래로 끌어내려도 눌러져요.</div>
+        </div>
+        <div class="actions" style="margin:0">
+          <button class="btn" id="release">② 손 놓기 🏓</button>
+          <button class="btn ghost" id="lreset">기록 지우기</button>
+        </div>
+        <div class="log" id="log"><h4>📋 관찰 기록 (압축한 길이 → 올라간 높이)</h4><div class="empty">아직 기록이 없어요. 용수철을 누르고 손을 놓아 보자.</div></div>
+      </div>
+    </div>
+    <div class="result" id="l-result" aria-live="polite" style="margin-top:12px"><span style="color:var(--muted)">누르는 정도를 서로 다르게 하여 3번 이상 쏘아 올려 보자.</span></div>
+
+    <h3 style="margin:22px 0 6px;font-size:20px">📝 활동 후 설명해 보기</h3>
+    <ol class="steps">
+      <li><span class="num">1</span><div>용수철을 눌렀던 손을 놓는 순간 탁구공은 어떻게 되는가?
+        <div><button class="btn ghost small" data-reveal="r-l1" style="margin-top:6px">예시 답안 보기</button></div>
+        <div class="reveal" id="r-l1">탁구공은 위로 튕겨 올라간다.</div></div></li>
+      <li><span class="num">2</span><div>용수철을 압축한 길이와 탁구공이 올라간 높이 사이에는 어떤 관계가 있는지 설명해 보자.
+        <div><button class="btn ghost small" data-reveal="r-l2" style="margin-top:6px">예시 답안 보기</button></div>
+        <div class="reveal" id="r-l2">용수철을 압축한 길이가 길수록 탁구공이 높이 올라간다.</div></div></li>
+    </ol>
+  </section>
+
+  <!-- 개념 1 : 탄성과 탄성력 -->
+  <section class="sec" id="concept1">
+    <span class="eyebrow">📘 교과서 개념</span>
+    <div class="sec-head"><h2>탄성과 탄성력</h2><span class="page">교과서 165쪽</span></div>
+    <p>용수철을 손으로 눌렀다 놓으면 용수철은 원래 모양으로 되돌아가면서 탁구공을 위로 밀어 올린다.</p>
+    <div class="def">변형된 물체가 원래 모양으로 되돌아가려는 성질을 <strong>탄성</strong>이라 하고, 변형된 물체가 원래 모양으로 되돌아가려고 하는 힘을 <strong>탄성력</strong>이라고 한다.</div>
+    <p>용수철을 압축한 길이가 길수록 탁구공이 더 높이 올라간 까닭은 용수철이 압축된 정도가 커서 탄성력이 크게 작용했기 때문이다. 즉, 탄성력은 탄성을 지닌 물체의 <strong>변형되는 정도가 클수록 커진다</strong>.</p>
+    <div class="tip">📎 <strong>탄성 한계</strong> — 볼펜 속 용수철을 조금 당겼다 놓으면 원래 모양으로 돌아가지만, 너무 많이 당기면 늘어난 채로 돌아오지 않아요. 원래 모양으로 되돌아갈 수 있는 힘의 한계를 <strong>탄성 한계</strong>라고 하며, 이보다 큰 힘으로 변형시키면 원래 모양으로 돌아가지 않거나 끊어져요.</div>
+  </section>
+
+  <!-- 개념 2 : 탄성력의 방향 -->
+  <section class="sec" id="concept2">
+    <span class="eyebrow">📘 교과서 개념</span>
+    <div class="sec-head"><h2>탄성력의 방향</h2><span class="page">교과서 165쪽</span></div>
+    <p>용수철을 손으로 잡아당기거나 밀 때 탄성력은 손이 용수철에 작용하는 힘의 방향과 <strong>반대 방향</strong>으로 작용한다. 이와 같이 탄성력은 탄성체를 변형시켰을 때 <strong>원래 모양으로 되돌아가려는 방향</strong>으로 작용한다.</p>
+    <div class="dir2">
+      <figure class="fig"><img src="images/spring-pull.png" alt="용수철을 오른쪽으로 잡아당기면 탄성력은 왼쪽으로 작용하는 그림"></figure>
+      <figure class="fig"><img src="images/spring-push.png" alt="용수철을 왼쪽으로 밀면 탄성력은 오른쪽으로 작용하는 그림"></figure>
+    </div>
+    <p style="text-align:center;font-size:15px;color:var(--muted);margin-top:-4px">그림 Ⅴ-7 탄성력의 방향</p>
+
+    <h3 style="margin:20px 0 4px;font-size:20px">🖐️ 직접 당기고 밀어 보자</h3>
+    <p style="font-size:15px;color:var(--muted);margin:0">손(●)을 좌우로 끌거나 슬라이더를 움직여 용수철을 늘이거나 줄여 보자. 점선은 용수철의 처음 길이예요.</p>
+    <div class="spstage"><svg id="spsvg" viewBox="0 0 680 230" aria-label="벽에 고정된 용수철을 당기거나 미는 시뮬레이션"></svg></div>
+    <div class="legend"><span style="--c:var(--f2)">손이 용수철에 작용하는 힘</span><span style="--c:var(--f1)">탄성력</span></div>
+    <div class="spctl">
+      <input type="range" id="sp" min="-8" max="16" step="1" value="0" aria-label="용수철 변형 길이(cm)">
+      <div class="spbtns"><button class="btn ghost small" data-sp="12">잡아당기기</button><button class="btn ghost small" data-sp="-8">밀기</button><button class="btn ghost small" data-sp="0">놓기</button></div>
+    </div>
+    <div class="spread">
+      <div><small>용수철의 변형</small><b id="sp-d">처음 길이</b></div>
+      <div><small>탄성력의 방향</small><b id="sp-dir" style="color:var(--f1)">—</b></div>
+      <div><small>탄성력의 크기</small><b id="sp-f">0 N</b></div>
+    </div>
+  </section>
+
+  <!-- 개념 3 : 탄성력의 크기 -->
+  <section class="sec" id="concept3">
+    <span class="eyebrow">📘 교과서 개념</span>
+    <div class="sec-head"><h2>탄성력의 크기</h2><span class="page">교과서 167쪽</span></div>
+    <p>용수철에 연결한 물체를 손으로 잡아당길 때 물체를 당기는 힘과 탄성력은 <strong>크기가 같고 방향이 반대</strong>이다. 또 용수철이 늘어난 길이는 물체를 당기는 힘의 크기에 비례하여 증가하므로 탄성력의 크기는 <strong>용수철이 늘어난 길이에 비례</strong>한다.</p>
+    <div class="graphwrap">
+      <figure class="fig"><img src="images/spring-force-graph.png" alt="용수철이 4 cm, 8 cm, 12 cm 늘어날 때 탄성력이 1.5 N, 3.0 N, 4.5 N이며, 늘어난 길이와 탄성력이 직선 그래프로 비례함을 나타낸 그림 Ⅴ-9"></figure>
+      <div>
+        <div class="q" style="padding-top:0;border-top:0">
+          <div class="ask"><span class="num">?</span><div>그림 Ⅴ-9에서 용수철이 <strong>4 cm</strong> 늘어날 때마다 탄성력은 몇 N씩 커질까?</div></div>
+          <div class="choices" data-answer="1.5 N">
+            <button class="choice">1 N</button><button class="choice">1.5 N</button><button class="choice">3 N</button>
+          </div>
+          <div class="fb" data-wrong="4 cm → 8 cm → 12 cm로 늘어날 때 탄성력이 어떻게 변하는지 그래프에서 읽어 보자.">정답은 <strong>1.5 N</strong>! 늘어난 길이가 2배, 3배가 되면 탄성력도 2배, 3배가 돼요. 이런 관계를 <strong>비례</strong>라고 해요.</div>
+        </div>
+        <div class="q">
+          <div class="ask"><span class="num">?</span><div>같은 용수철이 <strong>16 cm</strong> 늘어나면 탄성력은?</div></div>
+          <div class="choices" data-answer="6.0 N">
+            <button class="choice">4.5 N</button><button class="choice">6.0 N</button><button class="choice">7.5 N</button>
+          </div>
+          <div class="fb" data-wrong="16 cm는 4 cm의 몇 배인지 먼저 생각해 보자.">정답은 <strong>6.0 N</strong>! 16 cm는 4 cm의 4배이므로 1.5 N × 4 = 6.0 N이에요.</div>
+        </div>
+      </div>
+    </div>
+    <div class="later"><span class="ic">🔬</span><div><strong>나중에 직접 확인해요!</strong><br>용수철이 늘어난 길이와 탄성력이 정말 비례하는지는 뒤에서 <strong>‘용수철의 탄성력 측정하기’ 탐구(교과서 166쪽)</strong>를 통해 힘 센서로 직접 측정하고 그래프로 나타내 볼 거예요. 오늘은 그림 Ⅴ-9의 결과로 관계를 먼저 이해해 두자.</div></div>
+  </section>
+
+  <!-- 탄성력의 이용 -->
+  <section class="sec" id="uses">
+    <span class="eyebrow">🔎 생활 속 과학</span>
+    <div class="sec-head"><h2>탄성력의 이용</h2><span class="page">교과서 165쪽</span></div>
+    <p>우리 생활에서는 탄성력을 다양하게 이용하고 있다. 탄성력을 어떻게 이용하는지 먼저 생각해 본 뒤 설명을 열어 보자.</p>
+    <div class="ex">
+      <div class="excard">
+        <figure class="fig"><img src="images/watch-band.png" alt="잘 늘어나는 천으로 짠 시계 밴드"></figure>
+        <h3>⌚ 시계 밴드</h3>
+        <button class="btn ghost small" data-reveal="r-u1">설명 보기</button>
+        <div class="reveal" id="r-u1">밴드의 탄성력을 이용해 손목둘레에 맞게 시계를 찰 수 있다.</div>
+      </div>
+      <div class="excard">
+        <figure class="fig"><img src="images/keyboard.png" alt="컴퓨터 자판"></figure>
+        <h3>⌨️ 컴퓨터 자판</h3>
+        <button class="btn ghost small" data-reveal="r-u2">설명 보기</button>
+        <div class="reveal" id="r-u2">자판을 손가락으로 누르면 탄성력에 의해 다시 위로 올라온다.</div>
+      </div>
+      <div class="excard">
+        <figure class="fig"><img src="images/stretch-band.png" alt="여러 색의 스트레칭 밴드"></figure>
+        <h3>🧘 스트레칭 밴드</h3>
+        <button class="btn ghost small" data-reveal="r-u3">설명 보기</button>
+        <div class="reveal" id="r-u3">밴드의 탄성력을 이용해 운동을 한다. 밴드를 많이 늘일수록 탄성력이 커져 더 힘이 든다.</div>
+      </div>
+      <div class="excard">
+        <figure class="fig"><img src="images/bicycle.png" alt="충격 흡수 장치가 달린 자전거"></figure>
+        <h3>🚲 자전거 용수철</h3>
+        <button class="btn ghost small" data-reveal="r-u4">설명 보기</button>
+        <div class="reveal" id="r-u4"><img src="images/bike-spring.png" alt="자전거에 들어가는 용수철 충격 흡수 장치" style="display:block;max-width:100%;max-height:110px;margin:0 auto 6px;background:#fff;border-radius:10px">용수철의 탄성력을 이용해 울퉁불퉁한 길에서의 충격을 흡수한다.</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:14px">➕ <strong>더 알아보기</strong> — 농구공을 튕길 때, 양궁에서 활로 화살을 날려 보낼 때, 장대높이뛰기 선수가 장대를 이용해 높이 뛰어오를 때, 기타 줄을 튕겨 소리를 낼 때도 탄성력을 이용해요.</div>
+  </section>
+
+  <!-- 스스로 확인하기 -->
+  <section class="sec" id="check">
+    <span class="eyebrow">✅ 스스로 확인하기</span>
+    <div class="sec-head"><h2>배운 내용, 확인해 볼까요?</h2><span class="page">교과서 167쪽</span></div>
+
+    <div class="q">
+      <div class="ask"><span class="num">1</span><div>문장을 완성해 보자.<br>용수철을 손으로 잡아당길 때 손에 작용하는 탄성력의 방향은 용수철을 잡아당기는 방향과 <input class="blank" data-ans="반대" aria-label="빈칸 1"> 방향이다.</div></div>
+      <button class="btn small" data-blank>정답 확인</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">2</span><div>문장이 옳으면 O, 옳지 않으면 X를 선택해 보자.<br><strong>용수철을 밀 때 용수철이 줄어든 길이가 길수록 탄성력이 크다.</strong></div></div>
+      <div class="choices" data-answer="O"><button class="choice">O</button><button class="choice">X</button></div>
+      <div class="fb" data-wrong="해 보기에서 용수철을 많이 눌렀을 때 탁구공이 어떻게 올라갔는지 떠올려 보자.">정답은 <strong>O</strong>! 탄성력은 변형된 정도가 클수록 커요. 늘어날 때뿐만 아니라 줄어들 때도 마찬가지예요.</div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">3</span><div><strong>탐구 능력</strong> | 그림 Ⅴ-9의 용수철을 이용해서 물체의 무게를 측정하는 방법을 이야기해 보자.</div></div>
+      <button class="btn small ghost" data-reveal="r-c3h">💡 힌트</button>
+      <button class="btn small" data-reveal="r-c3">예시 답안 보기</button>
+      <div class="reveal" id="r-c3h">용수철에 물체를 매달아 물체가 멈춰 있을 때, 물체의 무게(중력)와 평형을 이루는 힘은 무엇일까? 지난 시간에 배운 <strong>힘의 평형</strong>을 떠올려 보자.</div>
+      <div class="reveal" id="r-c3">용수철에 물체를 매달았을 때 물체의 무게는 용수철의 탄성력과 평형을 이룬다. 용수철이 늘어난 길이에 따른 탄성력의 크기를 알고 있으므로, 이 용수철에 물체를 매달아 용수철이 늘어난 길이를 측정하면 물체의 무게를 알 수 있다. (예: 8 cm 늘어나면 무게는 3.0 N)</div>
+    </div>
+  </section>
+
+  <!-- 개념 확인 문제 -->
+  <section class="sec" id="more">
+    <span class="eyebrow">✏️ 개념 확인 문제</span>
+    <div class="sec-head"><h2>조금 더 풀어볼까요?</h2><span class="page">탄성력 연습 문제</span></div>
+
+    <div class="q">
+      <div class="ask"><span class="num">1</span><div>문장이 옳으면 O, 옳지 않으면 X를 선택해 보자.<br><strong>탄성력은 물체를 변형시킨 힘과 같은 방향으로 작용한다.</strong></div></div>
+      <div class="choices" data-answer="X"><button class="choice">O</button><button class="choice">X</button></div>
+      <div class="fb" data-wrong="그림 Ⅴ-7에서 손의 힘(파란색)과 탄성력(빨간색)의 방향을 비교해 보자.">정답은 <strong>X</strong>! 탄성력은 변형시킨 힘과 <strong>반대 방향</strong>, 즉 원래 모양으로 되돌아가려는 방향으로 작용해요.</div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">2</span><div>벽에 고정된 용수철을 손으로 <strong>왼쪽</strong>으로 밀었다. 손에 작용하는 탄성력의 방향은?</div></div>
+      <div class="choices" data-answer="오른쪽">
+        <button class="choice">왼쪽</button><button class="choice">오른쪽</button><button class="choice">아래쪽</button>
+      </div>
+      <div class="fb" data-wrong="줄어든 용수철은 어느 쪽으로 되돌아가려고 할까?">정답은 <strong>오른쪽</strong>! 줄어든 용수철은 원래 길이로 늘어나려고 하므로 미는 힘과 반대인 오른쪽으로 탄성력이 작용해요.</div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">3</span><div>어떤 용수철을 <strong>2 cm</strong> 늘였더니 탄성력이 <strong>1 N</strong>이었다. 이 용수철을 <strong>10 cm</strong> 늘이면 탄성력은?</div></div>
+      <div class="choices" data-answer="5 N">
+        <button class="choice">1 N</button><button class="choice">5 N</button><button class="choice">10 N</button><button class="choice">20 N</button>
+      </div>
+      <div class="fb" data-wrong="탄성력은 늘어난 길이에 비례해요. 10 cm는 2 cm의 몇 배일까?">정답은 <strong>5 N</strong>! 늘어난 길이가 5배이므로 탄성력도 1 N × 5 = 5 N이에요.</div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">4</span><div>탄성력의 특징을 알맞게 연결하시오.</div></div>
+      <div class="match">
+        <span>(1) 탄성력의 크기</span>
+        <select data-ans="변형된 길이에 비례한다"><option value="">선택하기</option><option>변형된 길이에 비례한다</option><option>항상 일정하다</option><option>원래 모양으로 되돌아가려는 방향</option><option>지구 중심 방향</option></select>
+        <span>(2) 탄성력의 방향</span>
+        <select data-ans="원래 모양으로 되돌아가려는 방향"><option value="">선택하기</option><option>변형된 길이에 비례한다</option><option>항상 일정하다</option><option>원래 모양으로 되돌아가려는 방향</option><option>지구 중심 방향</option></select>
+      </div>
+      <button class="btn small" data-match-check>정답 확인</button>
+      <div class="fb" data-ok="정답! 탄성력의 크기는 <strong>변형된 길이에 비례</strong>하고, 방향은 <strong>원래 모양으로 되돌아가려는 방향</strong>이에요." data-no="빨간 칸을 다시 골라 보자. ‘지구 중심 방향’은 어떤 힘의 방향이었는지도 떠올려 봐요."></div>
+    </div>
+
+    <div class="q">
+      <div class="ask"><span class="num">5</span><div>탄성력을 이용한 예를 &lt;보기&gt;에서 모두 고르시오.</div></div>
+      <div class="bogi" data-answer="ㄱ,ㄷ,ㄹ">
+        <div class="it"><button class="pick" aria-pressed="false" data-k="ㄱ">ㄱ</button><div>양궁 선수가 활시위를 당겼다 놓아 화살을 날려 보낸다.</div></div>
+        <div class="it"><button class="pick" aria-pressed="false" data-k="ㄴ">ㄴ</button><div>다림추를 이용해 기둥이 똑바로 서 있는지 확인한다.</div></div>
+        <div class="it"><button class="pick" aria-pressed="false" data-k="ㄷ">ㄷ</button><div>장대높이뛰기 선수가 휘어진 장대를 이용해 높이 뛰어오른다.</div></div>
+        <div class="it"><button class="pick" aria-pressed="false" data-k="ㄹ">ㄹ</button><div>트램펄린 위에서 뛰면 높이 튀어 오른다.</div></div>
+      </div>
+      <button class="btn small" data-bogi-check>정답 확인</button>
+      <div class="fb" data-ok="<strong>답 ㄱ, ㄷ, ㄹ</strong> — 활, 장대, 트램펄린은 변형되었다가 원래 모양으로 되돌아가려는 탄성력을 이용해요. ㄴ의 다림추는 <strong>중력</strong>을 이용한 예예요." data-no="아쉬워요! 물체가 <strong>휘거나 늘어났다가 원래 모양으로 되돌아가는</strong> 경우를 찾아보자."></div>
+    </div>
+  </section>
+
+  <!-- 정리 -->
+  <section class="sec" id="recap">
+    <span class="eyebrow">🧠 배운 내용 정리하기</span>
+    <div class="sec-head"><h2>이 단원에서 배운 내용을 정리해 보자.</h2><span class="page">교과서 164~167쪽</span></div>
+    <div class="recap6">
+      <div class="rc"><span class="ic">🔄</span><b>탄성</b>변형된 물체가 원래 모양으로 되돌아가려는 성질</div>
+      <div class="rc"><span class="ic">🌀</span><b>탄성력</b>변형된 물체가 원래 모양으로 되돌아가려고 하는 힘</div>
+      <div class="rc" style="border-left:5px solid var(--f1)"><span class="ic">↩️</span><b>탄성력의 방향</b>원래 모양으로 되돌아가려는 방향 (변형시킨 힘과 반대 방향)</div>
+      <div class="rc" style="border-left:5px solid var(--f2)"><span class="ic">📈</span><b>탄성력의 크기</b>변형된 길이에 비례 (예: 4 cm → 1.5 N, 8 cm → 3.0 N)</div>
+      <div class="rc"><span class="ic">⌚</span><b>탄성력의 이용</b>시계 밴드, 컴퓨터 자판, 스트레칭 밴드, 자전거 용수철</div>
+      <div class="rc"><span class="ic">⚠️</span><b>탄성 한계</b>이보다 큰 힘을 주면 원래 모양으로 돌아가지 않거나 끊어진다.</div>
+    </div>
+  </section>
+
+  <!-- 평가 길잡이 -->
+  <section class="sec" id="eval">
+    <span class="eyebrow">🌱 평가 길잡이</span>
+    <div class="sec-head"><h2>활동을 잘했는지 생각하며 체크해 보자</h2><span class="page">교과서 164쪽</span></div>
+    <div class="eval"><div>용수철을 눌렀다가 놓아서 탁구공이 위로 올라가는 현상을 관찰했는가?</div><div class="stars"></div></div>
+    <div class="eval"><div>용수철을 압축한 길이와 탁구공이 올라간 높이 사이의 관계를 설명할 수 있는가?</div><div class="stars"></div></div>
+    <div class="eval"><div>탄성력의 크기와 방향을 설명하고, 생활 속 이용 예를 말할 수 있는가?</div><div class="stars"></div></div>
+  </section>
+
+  <footer>미래엔 중학교 과학 1 · 5단원 힘의 작용 · 수업 학습자료</footer>
+</main>
+
+<script>
+(function(){
+  /* ---------- 공통 상호작용 ---------- */
+  function showFb(fb,ok,html){fb.classList.add('show');fb.classList.toggle('ok',ok);fb.classList.toggle('no',!ok);fb.innerHTML=html;}
+  document.querySelectorAll('[data-reveal]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var el=document.getElementById(b.dataset.reveal);
+      b.setAttribute('aria-expanded',el.classList.toggle('show'));
+    });
+  });
+  document.querySelectorAll('.choices').forEach(function(g){
+    var ans=g.dataset.answer, fb=g.nextElementSibling, okHtml=fb.innerHTML;
+    var wrong=fb.dataset.wrong||'다시 생각해 보자!';
+    g.querySelectorAll('.choice').forEach(function(c){
+      c.addEventListener('click',function(){
+        g.querySelectorAll('.choice').forEach(function(x){x.classList.remove('right','wrong')});
+        var ok=c.textContent.trim()===ans;
+        c.classList.add(ok?'right':'wrong');
+        showFb(fb,ok,ok?okHtml:'🤔 '+wrong);
+      });
+    });
+  });
+  document.querySelectorAll('[data-blank]').forEach(function(b){
+    var q=b.closest('.q'), inps=q.querySelectorAll('.blank'), fb=q.querySelector('.fb');
+    function go(){
+      var all=true, empty=false;
+      inps.forEach(function(inp){
+        var v=inp.value.replace(/\s/g,''), ok=inp.dataset.ans.split('|').indexOf(v)>-1;
+        if(!v)empty=true; if(!ok)all=false;
+        inp.classList.toggle('right',ok); inp.classList.toggle('wrong',!ok);
+      });
+      showFb(fb,all,all?'정답! 🎉':(empty?'빈칸을 모두 채운 뒤 확인해 보자.':'빨간 빈칸을 다시 생각해 보자. 개념 설명을 다시 읽어 봐요.'));
+    }
+    b.addEventListener('click',go);
+    inps.forEach(function(i){i.addEventListener('keydown',function(e){if(e.key==='Enter')go();});});
+  });
+  document.querySelectorAll('[data-match-check]').forEach(function(b){
+    var q=b.closest('.q'), fb=q.querySelector('.fb');
+    b.addEventListener('click',function(){
+      var all=true;
+      q.querySelectorAll('select').forEach(function(s){var ok=s.value===s.dataset.ans;if(!ok)all=false;s.classList.toggle('right',ok);s.classList.toggle('wrong',!ok);});
+      showFb(fb,all,all?fb.dataset.ok:fb.dataset.no);
+    });
+  });
+  document.querySelectorAll('.pick').forEach(function(p){
+    p.addEventListener('click',function(){p.setAttribute('aria-pressed',p.getAttribute('aria-pressed')!=='true');});
+  });
+  document.querySelectorAll('[data-bogi-check]').forEach(function(b){
+    var q=b.closest('.q'), box=q.querySelector('.bogi'), fb=q.querySelector('.fb');
+    b.addEventListener('click',function(){
+      var sel=[].slice.call(box.querySelectorAll('.pick[aria-pressed="true"]')).map(function(p){return p.dataset.k;}).join(',');
+      if(!sel){showFb(fb,false,'보기에서 답을 먼저 골라 보자.');return;}
+      var ok=sel===box.dataset.answer; showFb(fb,ok,ok?fb.dataset.ok:fb.dataset.no);
+    });
+  });
+  document.querySelectorAll('.stars').forEach(function(s){
+    for(var i=1;i<=3;i++)(function(n){
+      var b=document.createElement('button');b.textContent='★';b.setAttribute('aria-label','별 '+n+'개');
+      b.addEventListener('click',function(){s.querySelectorAll('button').forEach(function(x,k){x.classList.toggle('on',k<n)})});
+      s.appendChild(b);
+    })(i);
+  });
+
+
+
+  var NS='http://www.w3.org/2000/svg';
+  function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+  function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+  function coil(x1,y1,x2,y2,n,w){ // 두 점 사이 지그재그 용수철 경로
+    var dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L, px=-uy, py=ux, lead=Math.min(10,L*0.1);
+    var d='M'+x1+' '+y1+' L'+(x1+ux*lead)+' '+(y1+uy*lead), seg=(L-2*lead)/(n*2);
+    for(var i=1;i<=n*2;i++){var s=lead+seg*(i-0.5), side=(i%2?1:-1)*w;
+      d+=' L'+(x1+ux*s+px*side).toFixed(1)+' '+(y1+uy*s+py*side).toFixed(1);}
+    d+=' L'+(x2-ux*lead)+' '+(y2-uy*lead)+' L'+x2+' '+y2; return d;
+  }
+
+  /* ---------- 탁구공 쏘아 올리기 ---------- */
+  var ls=document.getElementById('lsvg'), press=document.getElementById('press');
+  var BASE=404, NAT=150, CPX=21, R=18, CX=180, HMAX=205;
+  var gScale=el('g',{},ls);
+  for(var h=0;h<=6;h++){var y=BASE-NAT-R*2-h*50; if(y<10)break;
+    el('line',{x1:40,y1:y,x2:330,y2:y,stroke:'#E3E8F0','stroke-dasharray':'4 5'},gScale);}
+  el('rect',{x:0,y:BASE+14,width:360,height:30,fill:'#EDE3D6'},ls);
+  el('rect',{x:CX-48,y:BASE,width:96,height:16,rx:6,fill:'#2BA89A'},ls);
+  var spring=el('path',{fill:'none',stroke:'#8A94A6','stroke-width':4,'stroke-linejoin':'round'},ls);
+  var cap=el('rect',{x:CX-30,width:60,height:6,rx:3,fill:'#8A94A6'},ls);
+  var mark=el('line',{x1:40,x2:330,stroke:'#E0413A','stroke-width':2,'stroke-dasharray':'6 5',opacity:0},ls);
+  var markT=el('text',{x:44,'font-size':14,'font-weight':700,fill:'#E0413A',opacity:0},ls);
+  var ball=el('circle',{cx:CX,r:R,fill:'#FFA53A',stroke:'#E08A1E','stroke-width':2,style:'cursor:grab'},ls);
+  var hand=el('text',{x:CX+26,'font-size':40,opacity:0},ls); hand.textContent='✋';
+  var state={c:0,flying:false,top:0};
+  function springTop(){return BASE-(NAT-state.c*CPX/1);}
+  function drawL(yBall){
+    var top=springTop();
+    spring.setAttribute('d',coil(CX,BASE,CX,top,7,24));
+    cap.setAttribute('y',top-3);
+    ball.setAttribute('cy',yBall!==undefined?yBall:top-R-3);
+    hand.setAttribute('y',top-R-3+6); hand.setAttribute('opacity',(!state.flying&&state.c>0)?1:0);
+  }
+  press.addEventListener('input',function(){if(state.flying)return;state.c=+press.value;drawL();});
+  // 탁구공 끌어내리기
+  var drag=false;
+  function svgY(e){var p=ls.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(ls.getScreenCTM().inverse()).y;}
+  ball.addEventListener('pointerdown',function(e){if(state.flying)return;drag=true;ls.setPointerCapture(e.pointerId);e.preventDefault();});
+  ls.addEventListener('pointermove',function(e){if(!drag)return;var y=svgY(e), restTop=BASE-NAT-R-3;
+    var c=Math.round(Math.max(0,Math.min(5,(y-restTop)/CPX)));state.c=c;press.value=c;drawL();});
+  ls.addEventListener('pointerup',function(){drag=false;});
+  ls.addEventListener('pointercancel',function(){drag=false;});
+
+  var records=[], logEl=document.getElementById('log'), lres=document.getElementById('l-result');
+  function renderLog(){
+    if(!records.length){logEl.innerHTML='<h4>📋 관찰 기록 (압축한 길이 → 올라간 높이)</h4><div class="empty">아직 기록이 없어요. 용수철을 누르고 손을 놓아 보자.</div>';return;}
+    var s='<h4>📋 관찰 기록 (압축한 길이 → 올라간 높이)</h4>';
+    records.slice().sort(function(a,b){return a.c-b.c;}).forEach(function(r){
+      s+='<div class="row"><span>'+r.c+'칸 눌렀을 때</span><i style="width:'+Math.max(4,r.h/HMAX*100)+'%"></i></div>';});
+    logEl.innerHTML=s;
+  }
+  document.getElementById('release').addEventListener('click',function(){
+    if(state.flying)return;
+    var c=state.c;
+    if(c===0){lres.className='result';lres.innerHTML='🤔 용수철을 누르지 않으면 탁구공이 튀어 오르지 않아요. 먼저 용수철을 눌러 보자.';return;}
+    state.flying=true;
+    var h=HMAX*(c/5)*(c/5), restY=BASE-NAT-R-3, startY=springTop()-R-3, t0=null;
+    var up=Math.sqrt(h), T=700+up*40; // 체공 시간 연출
+    function step(ts){
+      if(!t0)t0=ts; var t=(ts-t0)/T;
+      // 용수철 빠르게 복원
+      var ct=Math.max(0,c*(1-t*8)); state.c=ct;
+      var y;
+      if(t<1){y=restY-(4*h*t*(1-t))+ (t<0.125?(startY-restY)*(1-t*8):0);}
+      else y=restY;
+      drawL(Math.min(y,restY));
+      if(t<0.5){} 
+      if(t<1){requestAnimationFrame(step);}
+      else{
+        state.c=0;state.flying=false;press.value=0;drawL();
+        var my=restY-h; mark.setAttribute('y1',my);mark.setAttribute('y2',my);mark.setAttribute('opacity',1);
+        markT.setAttribute('y',my-6);markT.setAttribute('opacity',1);markT.textContent=c+'칸 눌렀을 때 최고 높이';
+        var old=records.filter(function(r){return r.c===c;})[0]; if(old)old.h=h; else records.push({c:c,h:h});
+        renderLog();
+        var kinds=records.length;
+        if(kinds>=3){lres.className='result ok';lres.innerHTML='<div class="formula">🎉 관찰 완료!</div><div>기록을 비교해 보면 용수철을 <strong>많이 누를수록</strong> 탁구공이 <strong>더 높이</strong> 올라가요. 아래 질문에 답해 보자.</div>';}
+        else{lres.className='result';lres.innerHTML='👍 '+kinds+'번째 기록! 누르는 정도를 <strong>다르게</strong> 바꿔서 '+(3-kinds)+'번 더 쏘아 올려 보자.';}
+      }
+    }
+    requestAnimationFrame(step);
+  });
+  document.getElementById('lreset').addEventListener('click',function(){
+    records=[];renderLog();mark.setAttribute('opacity',0);markT.setAttribute('opacity',0);
+    lres.className='result';lres.innerHTML='<span style="color:var(--muted)">누르는 정도를 서로 다르게 하여 3번 이상 쏘아 올려 보자.</span>';
+  });
+  drawL();
+
+  /* ---------- 당기고 밀기 시뮬레이터 ---------- */
+  var sv=document.getElementById('spsvg'), sp=document.getElementById('sp');
+  var WALL=50, L0=280, CM=12, Y=96, K=0.375, PXN=26;
+  el('rect',{x:20,y:20,width:30,height:150,fill:'#B98A5A',rx:3},sv);
+  for(var i=0;i<8;i++) el('line',{x1:20,y1:36+i*19,x2:50,y2:26+i*19,stroke:'#9C7146','stroke-width':2},sv);
+  var nat=WALL+L0;
+  el('line',{x1:nat,y1:30,x2:nat,y2:170,stroke:'#8A94A6','stroke-width':2,'stroke-dasharray':'6 6'},sv);
+  var natT=el('text',{x:nat,y:24,'text-anchor':'middle','font-size':13,fill:'#5B6578'},sv); natT.textContent='처음 길이';
+  // ruler
+  for(var cmv=-8;cmv<=16;cmv+=4){var rx=nat+cmv*CM;
+    el('line',{x1:rx,y1:196,x2:rx,y2:206,stroke:'#8A94A6','stroke-width':1.5},sv);
+    var tt=el('text',{x:rx,y:222,'text-anchor':'middle','font-size':12,fill:'#5B6578'},sv); tt.textContent=(cmv>0?'+':'')+cmv;}
+  el('line',{x1:nat-8*CM,y1:200,x2:nat+16*CM,y2:200,stroke:'#8A94A6','stroke-width':1.5},sv);
+  var unitT=el('text',{x:nat+16*CM+8,y:204,'font-size':12,fill:'#5B6578'},sv); unitT.textContent='cm';
+  var sPath=el('path',{fill:'none',stroke:'#8A94A6','stroke-width':4,'stroke-linejoin':'round'},sv);
+  var gA=el('g',{},sv);
+  var knob=el('circle',{r:13,cy:Y,fill:'#1D2433',style:'cursor:ew-resize'},sv);
+  var knobHit=el('circle',{r:30,cy:Y,fill:'transparent',style:'cursor:ew-resize'},sv);
+  function arrow(x1,x2,y,col,label,above){
+    if(Math.abs(x2-x1)<2)return;
+    var d=x2>x1?1:-1, hx=x2-d*14;
+    el('line',{x1:x1,y1:y,x2:hx,y2:y,stroke:col,'stroke-width':6},gA);
+    el('polygon',{points:x2+','+y+' '+hx+','+(y-9)+' '+hx+','+(y+9),fill:col},gA);
+    var t=el('text',{x:(x1+x2)/2,y:above?y-14:y+26,'text-anchor':'middle','font-size':14,'font-weight':700,fill:col},gA); t.textContent=label;
+  }
+  function drawS(){
+    var d=+sp.value, end=nat+d*CM, F=Math.abs(d)*K;
+    sPath.setAttribute('d',coil(WALL,Y,end,Y,12,16));
+    knob.setAttribute('cx',end); knobHit.setAttribute('cx',end);
+    gA.innerHTML='';
+    if(d!==0){
+      var len=F*PXN, s=d>0?1:-1;
+      arrow(end,end+s*len,Y-34,css('--f2')||'#1F63C8',(d>0?'잡아당기는 힘 ':'미는 힘 ')+F.toFixed(1)+' N',true);
+      arrow(end,end-s*len,Y+34,css('--f1')||'#E0413A','탄성력 '+F.toFixed(1)+' N',false);
+    }
+    document.getElementById('sp-d').textContent=d===0?'처음 길이':(d>0?Math.abs(d)+' cm 늘어남':Math.abs(d)+' cm 줄어듦');
+    document.getElementById('sp-dir').textContent=d===0?'—':(d>0?'⬅ 왼쪽':'오른쪽 ➡');
+    document.getElementById('sp-f').textContent=(Math.round(F*100)/100)+' N';
+  }
+  sp.addEventListener('input',drawS);
+  document.querySelectorAll('[data-sp]').forEach(function(b){b.addEventListener('click',function(){sp.value=b.dataset.sp;drawS();});});
+  var sd=false;
+  function sx(e){var p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse()).x;}
+  [knob,knobHit].forEach(function(k){k.addEventListener('pointerdown',function(e){sd=true;sv.setPointerCapture(e.pointerId);e.preventDefault();});});
+  sv.addEventListener('pointermove',function(e){if(!sd)return;var d=Math.round((sx(e)-nat)/CM);sp.value=Math.max(-8,Math.min(16,d));drawS();});
+  sv.addEventListener('pointerup',function(){sd=false;});
+  sv.addEventListener('pointercancel',function(){sd=false;});
+  drawS();
+})();
+</script>
+</body>
+</html>
